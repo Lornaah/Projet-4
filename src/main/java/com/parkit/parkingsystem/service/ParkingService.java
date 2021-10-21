@@ -106,7 +106,7 @@ public class ParkingService {
 			Date outTime = new Date();
 			ticket.setOutTime(outTime);
 			fareCalculatorService.calculateFare(ticket, ticketDAO);
-			if (ticketDAO.countVisit(ticket)) {
+			if (ticketDAO.hasVisited(ticket)) {
 				System.out.println(
 						"Welcome back! As a recurring user of our parking lot, you'll benefit from a 5% discount");
 			}

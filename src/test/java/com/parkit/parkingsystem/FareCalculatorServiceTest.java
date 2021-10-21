@@ -2,12 +2,17 @@ package com.parkit.parkingsystem;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.Mockito.when;
 
 import java.util.Date;
 
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
 
 import com.parkit.parkingsystem.constants.Fare;
 import com.parkit.parkingsystem.constants.ParkingType;
@@ -16,11 +21,15 @@ import com.parkit.parkingsystem.model.ParkingSpot;
 import com.parkit.parkingsystem.model.Ticket;
 import com.parkit.parkingsystem.service.FareCalculatorService;
 
+@ExtendWith(MockitoExtension.class)
+
 public class FareCalculatorServiceTest {
 
 	private static FareCalculatorService fareCalculatorService;
 	private Ticket ticket;
-	private TicketDAO ticketDAO;
+
+	@Mock
+	TicketDAO ticketDAO;
 
 	@BeforeAll
 	private static void setUp() {
@@ -30,7 +39,6 @@ public class FareCalculatorServiceTest {
 	@BeforeEach
 	private void setUpPerTest() {
 		ticket = new Ticket();
-		ticketDAO = new TicketDAO();
 	}
 
 	@Test
@@ -144,7 +152,8 @@ public class FareCalculatorServiceTest {
 	public void freeThirtyMinutes() {
 		// Arrange
 		Date inTime = new Date();
-		inTime.setTime(System.currentTimeMillis() - (30 * 60 * 1000)); // 30 minutes parking time or less should be free
+		// 30 minutes parking time or less should be free
+		inTime.setTime(System.currentTimeMillis() - (30 * 60 * 1000));
 
 		Date outTime = new Date();
 		ParkingSpot parkingSpot = new ParkingSpot(1, ParkingType.CAR, false);
@@ -160,23 +169,24 @@ public class FareCalculatorServiceTest {
 	}
 
 	@Test
+	@DisplayName("A vehicle which has already visited the parking has to get 5% off discount")
 	public void getDiscount() {
+
 		// Arrange
 		Date inTime = new Date();
 		inTime.setTime(System.currentTimeMillis() - (60 * 60 * 1000));
-
 		Date outTime = new Date();
 		ParkingSpot parkingSpot = new ParkingSpot(1, ParkingType.CAR, false);
+		// Mock ticketDAO's countVisit returning true
+		when(ticketDAO.hasVisited(ticket)).thenReturn(true);
 
 		// Act
 		ticket.setInTime(inTime);
 		ticket.setOutTime(outTime);
 		ticket.setParkingSpot(parkingSpot);
 		fareCalculatorService.calculateFare(ticket, ticketDAO);
-		fareCalculatorService.calculateFare(ticket, ticketDAO);
 
 		// Assert
 		assertEquals(Fare.CAR_RATE_PER_HOUR * 0.95 * 0.5, ticket.getPrice());
-
 	}
 }

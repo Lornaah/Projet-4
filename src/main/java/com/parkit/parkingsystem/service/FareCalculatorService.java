@@ -22,15 +22,13 @@ public class FareCalculatorService {
 		float duration = outTime - inTime;
 		float durationInHour = duration / 1000 / 3600;
 
-		boolean hasVisited = ticketDAO.countVisit(ticket);
-
 		if (durationInHour <= 0.5) {
 			ticket.setPrice(0);
 		}
 
 		else {
 			double discount = 1;
-			if (hasVisited) {
+			if (ticketDAO.hasVisited(ticket)) {
 				discount = 0.95;
 			}
 			switch (ticket.getParkingSpot().getParkingType()) {

@@ -89,7 +89,7 @@ public class TicketDAO {
 		return false;
 	}
 
-	public boolean countVisit(Ticket ticket) {
+	public boolean hasVisited(Ticket ticket) {
 		Connection con = null;
 		try {
 			con = dataBaseConfig.getConnection();
