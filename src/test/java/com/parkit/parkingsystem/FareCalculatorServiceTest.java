@@ -177,6 +177,7 @@ public class FareCalculatorServiceTest {
 		inTime.setTime(System.currentTimeMillis() - (60 * 60 * 1000));
 		Date outTime = new Date();
 		ParkingSpot parkingSpot = new ParkingSpot(1, ParkingType.CAR, false);
+
 		// Mock ticketDAO's countVisit returning true
 		when(ticketDAO.hasVisited(ticket)).thenReturn(true);
 
