@@ -96,11 +96,12 @@ public class TicketDAO {
 			PreparedStatement ps = con.prepareStatement(DBConstants.COUNT_VISIT);
 			ps.setString(1, ticket.getVehicleRegNumber());
 			ResultSet count = ps.executeQuery();
-			int result = count.getInt(1);
-			if (result != 0) {
-				return true;
+			if (count.next()) {
+				int result = count.getInt(1);
+				if (result != 0) {
+					return true;
+				}
 			}
-
 		} catch (ClassNotFoundException | SQLException ex) {
 			logger.error("Error when trying to count visits", ex);
 

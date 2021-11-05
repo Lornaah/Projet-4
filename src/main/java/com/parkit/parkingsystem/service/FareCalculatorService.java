@@ -10,7 +10,8 @@ public class FareCalculatorService {
 
 	public void calculateFare(Ticket ticket, TicketDAO ticketDAO) {
 		if ((ticket.getOutTime() == null) || (ticket.getOutTime().before(ticket.getInTime()))) {
-			throw new IllegalArgumentException("Out time provided is incorrect:" + ticket.getOutTime().toString());
+			throw new IllegalArgumentException("Out time provided is incorrect:" + ticket.getOutTime().toString()
+					+ " In time : " + ticket.getInTime().toString());
 		}
 
 		Date inDate = ticket.getInTime();
@@ -19,8 +20,8 @@ public class FareCalculatorService {
 		long inTime = inDate.getTime();
 		long outTime = outDate.getTime();
 
-		float duration = outTime - inTime;
-		float durationInHour = duration / 1000 / 3600;
+		float duration = outTime - inTime; // Duration in millisecond
+		float durationInHour = duration / 1000 / 3600; // Conversion in hour
 
 		if (durationInHour <= 0.5) {
 			ticket.setPrice(0);
