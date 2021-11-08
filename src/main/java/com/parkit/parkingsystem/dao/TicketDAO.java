@@ -98,7 +98,7 @@ public class TicketDAO {
 			ResultSet count = ps.executeQuery();
 			if (count.next()) {
 				int result = count.getInt(1);
-				if (result != 0) {
+				if (result > 1) {
 					return true;
 				}
 			}

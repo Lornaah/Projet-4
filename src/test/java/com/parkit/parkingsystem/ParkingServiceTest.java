@@ -53,7 +53,7 @@ public class ParkingServiceTest {
 		Ticket ticket = new Ticket();
 		ParkingSpot parkingSpot = new ParkingSpot(1, ParkingType.CAR, false);
 
-		ticket.setInTime(new Date(System.currentTimeMillis() - (60 * 60 * 1000))); // Déplacement de plein de lignes
+		ticket.setInTime(new Date(System.currentTimeMillis() - (60 * 60 * 1000)));
 		ticket.setParkingSpot(parkingSpot);
 		ticket.setVehicleRegNumber("ABCDEF");
 
@@ -67,6 +67,14 @@ public class ParkingServiceTest {
 	public void processIncomingVehicleTest() {
 		when(parkingSpotDAO.getNextAvailableSlot(any(ParkingType.class))).thenReturn(1);
 		when(inputReaderUtil.readSelection()).thenReturn(1);
+		parkingService.processIncomingVehicle();
+		verify(parkingSpotDAO, Mockito.times(1)).updateParking(any(ParkingSpot.class));
+	}
+
+	@Test
+	public void processIncomingVehicleBikeTest() {
+		when(parkingSpotDAO.getNextAvailableSlot(any(ParkingType.class))).thenReturn(1);
+		when(inputReaderUtil.readSelection()).thenReturn(2);
 		parkingService.processIncomingVehicle();
 		verify(parkingSpotDAO, Mockito.times(1)).updateParking(any(ParkingSpot.class));
 	}
