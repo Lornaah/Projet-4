@@ -16,8 +16,7 @@ public class ParkingService {
 
 	private static final Logger logger = LogManager.getLogger("ParkingService");
 
-	private static FareCalculatorService fareCalculatorService = new FareCalculatorService();
-
+	private FareCalculatorService fareCalculatorService;
 	private InputReaderUtil inputReaderUtil;
 	private ParkingSpotDAO parkingSpotDAO;
 	private TicketDAO ticketDAO;
@@ -26,6 +25,7 @@ public class ParkingService {
 		this.inputReaderUtil = inputReaderUtil;
 		this.parkingSpotDAO = parkingSpotDAO;
 		this.ticketDAO = ticketDAO;
+		this.fareCalculatorService = new FareCalculatorService(ticketDAO);
 	}
 
 	public void processIncomingVehicle() {
@@ -105,7 +105,7 @@ public class ParkingService {
 			Ticket ticket = ticketDAO.getTicket(vehicleRegNumber);
 			Date outTime = new Date();
 			ticket.setOutTime(outTime);
-			fareCalculatorService.calculateFare(ticket, ticketDAO);
+			fareCalculatorService.calculateFare(ticket);
 			if (ticketDAO.hasVisited(ticket)) {
 				System.out.println(
 						"Welcome back! As a recurring user of our parking lot, you'll benefit from a 5% discount");

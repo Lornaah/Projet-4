@@ -33,12 +33,13 @@ public class FareCalculatorServiceTest {
 
 	@BeforeAll
 	private static void setUp() {
-		fareCalculatorService = new FareCalculatorService();
 	}
 
 	@BeforeEach
 	private void setUpPerTest() {
 		ticket = new Ticket();
+		fareCalculatorService = new FareCalculatorService(ticketDAO);
+
 	}
 
 	private void setUpTicket(Date inTime, Date outTime, ParkingSpot parkingSpot) {
@@ -57,7 +58,7 @@ public class FareCalculatorServiceTest {
 
 		// Act
 		setUpTicket(inTime, outTime, parkingSpot);
-		fareCalculatorService.calculateFare(ticket, ticketDAO);
+		fareCalculatorService.calculateFare(ticket);
 
 		// Assert
 		assertEquals(ticket.getPrice(), 1 * Fare.CAR_RATE_PER_HOUR);
@@ -73,7 +74,7 @@ public class FareCalculatorServiceTest {
 
 		// Act
 		setUpTicket(inTime, outTime, parkingSpot);
-		fareCalculatorService.calculateFare(ticket, ticketDAO);
+		fareCalculatorService.calculateFare(ticket);
 
 		// Assert
 		assertEquals(ticket.getPrice(), 1 * Fare.BIKE_RATE_PER_HOUR);
@@ -91,7 +92,7 @@ public class FareCalculatorServiceTest {
 		setUpTicket(inTime, outTime, parkingSpot);
 
 		// Assert
-		assertThrows(NullPointerException.class, () -> fareCalculatorService.calculateFare(ticket, ticketDAO));
+		assertThrows(NullPointerException.class, () -> fareCalculatorService.calculateFare(ticket));
 	}
 
 	@Test
@@ -106,7 +107,7 @@ public class FareCalculatorServiceTest {
 		setUpTicket(inTime, outTime, parkingSpot);
 
 		// Assert
-		assertThrows(IllegalArgumentException.class, () -> fareCalculatorService.calculateFare(ticket, ticketDAO));
+		assertThrows(IllegalArgumentException.class, () -> fareCalculatorService.calculateFare(ticket));
 	}
 
 	@Test
@@ -120,7 +121,7 @@ public class FareCalculatorServiceTest {
 
 		// Act
 		setUpTicket(inTime, outTime, parkingSpot);
-		fareCalculatorService.calculateFare(ticket, ticketDAO);
+		fareCalculatorService.calculateFare(ticket);
 
 		// Assert
 		assertEquals((0.75 * Fare.BIKE_RATE_PER_HOUR), ticket.getPrice());
@@ -138,7 +139,7 @@ public class FareCalculatorServiceTest {
 		// Act
 		setUpTicket(inTime, outTime, parkingSpot);
 
-		fareCalculatorService.calculateFare(ticket, ticketDAO);
+		fareCalculatorService.calculateFare(ticket);
 
 		// Assert
 		assertEquals((0.75 * Fare.CAR_RATE_PER_HOUR), ticket.getPrice());
@@ -155,7 +156,7 @@ public class FareCalculatorServiceTest {
 
 		// Act
 		setUpTicket(inTime, outTime, parkingSpot);
-		fareCalculatorService.calculateFare(ticket, ticketDAO);
+		fareCalculatorService.calculateFare(ticket);
 
 		// Assert
 		assertEquals((24 * Fare.CAR_RATE_PER_HOUR), ticket.getPrice());
@@ -173,7 +174,7 @@ public class FareCalculatorServiceTest {
 
 		// Act
 		setUpTicket(inTime, outTime, parkingSpot);
-		fareCalculatorService.calculateFare(ticket, ticketDAO);
+		fareCalculatorService.calculateFare(ticket);
 
 		// Assert
 		assertEquals(0, ticket.getPrice());
@@ -194,7 +195,7 @@ public class FareCalculatorServiceTest {
 
 		// Act
 		setUpTicket(inTime, outTime, parkingSpot);
-		fareCalculatorService.calculateFare(ticket, ticketDAO);
+		fareCalculatorService.calculateFare(ticket);
 
 		// Assert
 		assertEquals(Fare.CAR_RATE_PER_HOUR * 0.95, ticket.getPrice());
